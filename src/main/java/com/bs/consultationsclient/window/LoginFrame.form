@@ -52,13 +52,18 @@
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Component id="labelBanner" min="-2" pref="223" max="-2" attributes="0"/>
                           <Group type="102" attributes="0">
-                              <Component id="labelUser" min="-2" max="-2" attributes="0"/>
+                              <Component id="labelEmail" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="textFieldUser" min="-2" pref="149" max="-2" attributes="0"/>
+                              <Component id="textFieldEmail" min="-2" pref="149" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
-                  <EmptySpace pref="95" max="32767" attributes="0"/>
+                  <EmptySpace pref="101" max="32767" attributes="0"/>
+              </Group>
+              <Group type="102" alignment="1" attributes="0">
+                  <EmptySpace max="32767" attributes="0"/>
+                  <Component id="btnRegister" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -69,8 +74,8 @@
                   <Component id="labelBanner" min="-2" pref="42" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="labelUser" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="textFieldUser" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="labelEmail" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="textFieldEmail" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -79,7 +84,9 @@
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="btnLogin" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="81" max="32767" attributes="0"/>
+                  <EmptySpace pref="43" max="32767" attributes="0"/>
+                  <Component id="btnRegister" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -94,12 +101,12 @@
             <Property name="text" type="java.lang.String" value="CONSULTATIONS"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="labelUser">
+        <Component class="javax.swing.JLabel" name="labelEmail">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Username:"/>
+            <Property name="text" type="java.lang.String" value="E-mail:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="textFieldUser">
+        <Component class="javax.swing.JTextField" name="textFieldEmail">
         </Component>
         <Component class="javax.swing.JLabel" name="labelPass">
           <Properties>
@@ -118,6 +125,14 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="jPasswordField1"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnRegister">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Register"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRegisterActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

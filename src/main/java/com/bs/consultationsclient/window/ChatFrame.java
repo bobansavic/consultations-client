@@ -5,7 +5,7 @@
  */
 package com.bs.consultationsclient.window;
 
-import com.bs.consultationsclient.service.MessageService;
+import com.bs.consultationsclient.service.RabbitMqService;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.ComponentOrientation;
@@ -45,9 +45,9 @@ import org.springframework.stereotype.Component;
 
 //@Component
 public class ChatFrame extends JFrame implements ActionListener {
-
+    
     @Autowired
-    MessageService messageService;
+    private RabbitMqService rabbitMqService;
 
     private JPanel panel;
     private JPanel singleMessagePanel;
@@ -163,7 +163,7 @@ private static final String INSERT_BREAK = "insert-break";
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    messageService.sendMessage(textArea.getText());
+                    rabbitMqService.sendMessage(textArea.getText().getBytes());
                     panel.add(createSentMessagePanel());
                     textArea.setText("");
                     validate();
@@ -177,7 +177,6 @@ private static final String INSERT_BREAK = "insert-break";
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
         setLocationRelativeTo(null); // this centers the window
-        setVisible(true);
 
         textArea.addComponentListener(new ComponentListener() {
             @Override
@@ -339,7 +338,7 @@ private static final String INSERT_BREAK = "insert-break";
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                ChatFrame frame = new ChatFrame();
+                new ChatFrame().setVisible(true);
             }
         });
     }

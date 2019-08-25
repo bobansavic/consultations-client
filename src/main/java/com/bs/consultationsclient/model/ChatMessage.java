@@ -5,16 +5,17 @@
  */
 package com.bs.consultationsclient.model;
 
-import java.time.LocalDateTime;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  *
  * @author Boban
  */
-public class Message {
+public class ChatMessage implements Serializable{
     
-    private User sender;
-    private User reciever;
+    private ClientUser sender;
+    private ClientUser reciever;
     private String textMessage;
-    private LocalDateTime timestamp;
+    private Date timestamp;
 }

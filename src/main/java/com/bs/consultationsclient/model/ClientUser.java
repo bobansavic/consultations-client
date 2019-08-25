@@ -5,6 +5,7 @@
  */
 package com.bs.consultationsclient.model;
 
+import java.io.Serializable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
  * @author Boban
  */
 @Service
-public class User {
+public class ClientUser implements Serializable{
     
     private int userId;
     private String firstName;
