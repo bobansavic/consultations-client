@@ -31,8 +31,8 @@ import org.springframework.stereotype.Component;
 public class LoginFrame extends javax.swing.JFrame {
     private static final String ACTION_CODE_0 = "ACTION_CODE_0";
 
-    @Autowired
-    private RabbitMqService rabbitMqService;
+//    @Autowired
+//    private RabbitMqService rabbitMqService;
 
     @Autowired
     private SenderService senderService;

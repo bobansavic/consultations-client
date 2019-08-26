@@ -46,8 +46,8 @@ import org.springframework.stereotype.Component;
 //@Component
 public class ChatFrame extends JFrame implements ActionListener {
     
-    @Autowired
-    private RabbitMqService rabbitMqService;
+//    @Autowired
+//    private RabbitMqService rabbitMqService;
 
     private JPanel panel;
     private JPanel singleMessagePanel;
@@ -162,15 +162,11 @@ private static final String INSERT_BREAK = "insert-break";
         actions.put(TEXT_SUBMIT, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    rabbitMqService.sendMessage(textArea.getText().getBytes());
-                    panel.add(createSentMessagePanel());
-                    textArea.setText("");
-                    validate();
-                    scroll.getVerticalScrollBar().setValue(scroll.getVerticalScrollBar().getMaximum());
-                } catch (IOException ex) {
-                    Logger.getLogger(ChatFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                //                    rabbitMqService.sendMessage(textArea.getText().getBytes());
+                panel.add(createSentMessagePanel());
+                textArea.setText("");
+                validate();
+                scroll.getVerticalScrollBar().setValue(scroll.getVerticalScrollBar().getMaximum());
             }
         });
 

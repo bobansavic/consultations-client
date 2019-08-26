@@ -6,7 +6,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@RabbitListener(queues = {"server", "queue_1"})
+@RabbitListener(queues = "queue_1")
 public class ListenerService {
   private static final String ACTION_CODE_0 = "ACTION_CODE_0";
   private static final String ACTION_CODE_1 = "ACTION_CODE_1";
