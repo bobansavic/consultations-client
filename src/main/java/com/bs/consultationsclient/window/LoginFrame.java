@@ -8,6 +8,7 @@ package com.bs.consultationsclient.window;
 import com.bs.consultationsclient.config.Config;
 import com.bs.consultationsclient.model.RabbitMqMessage;
 import com.bs.consultationsclient.service.RabbitMqService;
+import com.bs.consultationsclient.service.SenderService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.awt.EventQueue;
 import java.io.ByteArrayOutputStream;
@@ -28,9 +29,13 @@ import org.springframework.stereotype.Component;
  */
 //@Component
 public class LoginFrame extends javax.swing.JFrame {
+    private static final String ACTION_CODE_0 = "ACTION_CODE_0";
 
     @Autowired
     private RabbitMqService rabbitMqService;
+
+    @Autowired
+    private SenderService senderService;
 
     /**
      * Creates new form LoginFrame
@@ -146,7 +151,7 @@ public class LoginFrame extends javax.swing.JFrame {
 
         String email = textFieldEmail.getText();
         char[] password = passwordField.getPassword();
-        RabbitMqMessage rabbitMqMessage = new RabbitMqMessage("ACTION_CODE_0", email, password, "queue_1");
+        RabbitMqMessage rabbitMqMessage = new RabbitMqMessage(ACTION_CODE_0, email, password, "queue_1");
         
         /*ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutput out;
@@ -170,10 +175,10 @@ public class LoginFrame extends javax.swing.JFrame {
 
         try {
             // Java objects to JSON string - compact-print
-            String jsonString = mapper.writeValueAsString(rabbitMqMessage);
-            System.out.println(jsonString);
-            rabbitMqService.sendMessage(jsonString.getBytes());
-
+            String jsonPayload = mapper.writeValueAsString(rabbitMqMessage);
+            System.out.println(jsonPayload);
+//            rabbitMqService.sendMessage(jsonPayload.getBytes());
+            senderService.send("server", jsonPayload.getBytes());
         } catch (Exception e) {
             e.printStackTrace();
         }

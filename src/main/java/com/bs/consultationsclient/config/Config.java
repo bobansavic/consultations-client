@@ -6,6 +6,7 @@
 package com.bs.consultationsclient.config;
 
 import com.bs.consultationsclient.service.RabbitMqService;
+import com.bs.consultationsclient.service.SenderService;
 import com.bs.consultationsclient.window.ChatFrame;
 import com.bs.consultationsclient.window.LoginFrame;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +22,11 @@ public class Config {
     @Bean
     public RabbitMqService messageService() {
         return new RabbitMqService();
+    }
+
+    @Bean
+    public SenderService senderService() {
+        return new SenderService();
     }
     
     @Bean
