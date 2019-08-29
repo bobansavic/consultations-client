@@ -6,6 +6,8 @@
 package com.bs.consultationsclient.model;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -13,15 +15,17 @@ import java.io.Serializable;
  */
 public class RabbitMqMessage implements Serializable{
     private String actionCode;
+    private Long userId;
     private String FirstName;
     private String LastName;
     private String email;
     private char[] password;
-    private ChatMessage chatMessage;
+    private MessageDto messageDto;
     private String returnQueueId;
     private String errorMessage;
     private String uniqueIdentifier;
-    
+    private Map<Long, List<MessageDto>> clientMessages;
+
     public RabbitMqMessage() {
     }
     
@@ -32,11 +36,11 @@ public class RabbitMqMessage implements Serializable{
         this.returnQueueId = returnQueueId;
     }
 
-    public RabbitMqMessage(String actionCode, String email, char[] password, ChatMessage chatMessage, String returnQueueId) {
+    public RabbitMqMessage(String actionCode, String email, char[] password, MessageDto messageDto, String returnQueueId) {
         this.actionCode = actionCode;
         this.email = email;
         this.password = password;
-        this.chatMessage = chatMessage;
+        this.messageDto = messageDto;
         this.returnQueueId = returnQueueId;
     }
 
@@ -46,6 +50,14 @@ public class RabbitMqMessage implements Serializable{
 
     public void setActionCode(String actionCode) {
         this.actionCode = actionCode;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
     
     public String getFirstName() {
@@ -80,12 +92,12 @@ public class RabbitMqMessage implements Serializable{
         this.password = password;
     }
 
-    public ChatMessage getChatMessage() {
-        return chatMessage;
+    public MessageDto getMessageDto() {
+        return messageDto;
     }
 
-    public void setChatMessage(ChatMessage chatMessage) {
-        this.chatMessage = chatMessage;
+    public void setMessageDto(MessageDto messageDto) {
+        this.messageDto = messageDto;
     }
     
     public String getReturnQueueId() {
@@ -110,5 +122,14 @@ public class RabbitMqMessage implements Serializable{
 
     public void setUniqueIdentifier(String uniqueIdentifier) {
         this.uniqueIdentifier = uniqueIdentifier;
+    }
+
+    public Map<Long, List<MessageDto>> getClientMessages() {
+        return clientMessages;
+    }
+
+    public void setClientMessages(
+        Map<Long, List<MessageDto>> clientMessages) {
+        this.clientMessages = clientMessages;
     }
 }

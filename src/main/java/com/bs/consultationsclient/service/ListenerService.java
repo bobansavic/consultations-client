@@ -1,6 +1,8 @@
 package com.bs.consultationsclient.service;
 
 import com.bs.consultationsclient.model.RabbitMqMessage;
+import com.bs.consultationsclient.model.UserDto;
+import com.bs.consultationsclient.util.Session;
 import com.bs.consultationsclient.window.LoginFrame;
 import com.bs.consultationsclient.window.RegisterFrame;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,19 +32,23 @@ public class ListenerService {
     @Autowired
     private LoginFrame loginFrame;
 
+    @Autowired
+    private Session session;
+
     private static final String ACTION_CODE_0 = "ACTION_CODE_0";
     private static final String ACTION_CODE_0_0 = "ACTION_CODE_0_0";
     private static final String ACTION_CODE_0_1 = "ACTION_CODE_0_1";
     private static final String ACTION_CODE_1 = "ACTION_CODE_1";
+    private static final String ACTION_CODE_1_1 = "ACTION_CODE_1_1";
     private final String QUEUE_1 = "queue_1";
     private RabbitMqMessage rabbitMessageIn;
+    AbstractMessageListenerContainer container;
 
     @Autowired
     private SenderService senderService;
 
     @RabbitHandler
     public void recieve(byte[] in) {
-//        AbstractMessageListenerContainer container = (AbstractMessageListenerContainer) registry.getListenerContainer("myListener");
 
         ObjectMapper mapper = new ObjectMapper();
 
@@ -55,7 +61,7 @@ public class ListenerService {
                 case ACTION_CODE_0_0:
                     System.out.println("REGISTRATION FAILED: " + rabbitMessageIn.getErrorMessage());
                     JOptionPane.showMessageDialog(null, "Error: " + rabbitMessageIn.getErrorMessage(), "Registration error", JOptionPane.ERROR_MESSAGE);
-                    AbstractMessageListenerContainer container = (AbstractMessageListenerContainer) registry.getListenerContainer("myListener");
+                    container = (AbstractMessageListenerContainer) registry.getListenerContainer("myListener");
                     try {
                         Queue sessionQueue = rabbitAdmin.declareQueue();
                         System.out.println(sessionQueue.getName() + " declared successfully!");
@@ -80,8 +86,17 @@ public class ListenerService {
                     loginFrame.reset();
                     loginFrame.setVisible(true);
                     break;
-                case ACTION_CODE_1:
+                case ACTION_CODE_1_1:
                     System.out.println("LOGIN SUCCESSFUL!");
+                    JOptionPane.showMessageDialog(null, "Login successful!", "Registration successful", JOptionPane.PLAIN_MESSAGE);
+                    UserDto activeUser = new UserDto(rabbitMessageIn.getUserId(), rabbitMessageIn.getFirstName(),
+                        rabbitMessageIn.getLastName(), rabbitMessageIn.getEmail(), rabbitMessageIn.getUniqueIdentifier());
+                    session.setActiveUser(activeUser);
+                    session.setClientMessages(rabbitMessageIn.getClientMessages());
+                    Queue activeUserQueue = new Queue(rabbitMessageIn.getUniqueIdentifier(), true);
+                    rabbitAdmin.declareQueue(activeUserQueue);
+                    container = (AbstractMessageListenerContainer) registry.getListenerContainer("myListener");
+                    container.addQueueNames(activeUserQueue.getName());
                     break;
             }
 
