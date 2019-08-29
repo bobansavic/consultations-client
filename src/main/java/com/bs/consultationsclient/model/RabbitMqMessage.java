@@ -13,10 +13,14 @@ import java.io.Serializable;
  */
 public class RabbitMqMessage implements Serializable{
     private String actionCode;
+    private String FirstName;
+    private String LastName;
     private String email;
     private char[] password;
     private ChatMessage chatMessage;
     private String returnQueueId;
+    private String errorMessage;
+    private String uniqueIdentifier;
     
     public RabbitMqMessage() {
     }
@@ -42,6 +46,22 @@ public class RabbitMqMessage implements Serializable{
 
     public void setActionCode(String actionCode) {
         this.actionCode = actionCode;
+    }
+    
+    public String getFirstName() {
+        return FirstName;
+    }
+
+    public void setFirstName(String FirstName) {
+        this.FirstName = FirstName;
+    }
+
+    public String getLastName() {
+        return LastName;
+    }
+
+    public void setLastName(String LastName) {
+        this.LastName = LastName;
     }
 
     public String getEmail() {
@@ -74,5 +94,21 @@ public class RabbitMqMessage implements Serializable{
 
     public void setReturnQueueId(String queueId) {
         this.returnQueueId = queueId;
+    }
+    
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+    
+    public String getUniqueIdentifier() {
+        return uniqueIdentifier;
+    }
+
+    public void setUniqueIdentifier(String uniqueIdentifier) {
+        this.uniqueIdentifier = uniqueIdentifier;
     }
 }

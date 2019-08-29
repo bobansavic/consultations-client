@@ -1,44 +1,103 @@
 package com.bs.consultationsclient.service;
 
 import com.bs.consultationsclient.model.RabbitMqMessage;
+import com.bs.consultationsclient.window.LoginFrame;
+import com.bs.consultationsclient.window.RegisterFrame;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.annotation.PostConstruct;
+import javax.swing.JOptionPane;
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
+import org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer;
+import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@RabbitListener(queues = "queue_1")
+@RabbitListener(id = "myListener", queues = {"queue_1", "RETURN_QUEUE_REGISTER_1"})
 public class ListenerService {
-  private static final String ACTION_CODE_0 = "ACTION_CODE_0";
-  private static final String ACTION_CODE_1 = "ACTION_CODE_1";
-  private final String QUEUE_1 = "queue_1";
 
-  @Autowired
-  private SenderService senderService;
+    @Autowired
+    private RabbitListenerEndpointRegistry registry;
 
-  @RabbitHandler
-  public void recieve(byte[] in) {
+    @Autowired
+    private RabbitAdmin rabbitAdmin;
 
-    ObjectMapper mapper = new ObjectMapper();
+    @Autowired
+    private RegisterFrame registerFrame;
 
-    try {
-      // JSON string to Java object
-      String jsonString = new String(in, "UTF-8");
-      RabbitMqMessage rabbitMqMessageIn = mapper.readValue(jsonString, RabbitMqMessage.class);
+    @Autowired
+    private LoginFrame loginFrame;
 
-        switch(rabbitMqMessageIn.getActionCode()) {
-          case ACTION_CODE_0:
-            System.out.println("LOGIN FAILED!");
-            break;
-          case ACTION_CODE_1:
-            System.out.println("LOGIN SUCCESSFUL!");
-            break;
+    private static final String ACTION_CODE_0 = "ACTION_CODE_0";
+    private static final String ACTION_CODE_0_0 = "ACTION_CODE_0_0";
+    private static final String ACTION_CODE_0_1 = "ACTION_CODE_0_1";
+    private static final String ACTION_CODE_1 = "ACTION_CODE_1";
+    private final String QUEUE_1 = "queue_1";
+    private RabbitMqMessage rabbitMessageIn;
+
+    @Autowired
+    private SenderService senderService;
+
+    @RabbitHandler
+    public void recieve(byte[] in) {
+//        AbstractMessageListenerContainer container = (AbstractMessageListenerContainer) registry.getListenerContainer("myListener");
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            String jsonString = new String(in, "UTF-8");
+            System.out.println("INCOMMING MESSAGE:\n" + jsonString);
+            rabbitMessageIn = mapper.readValue(jsonString, RabbitMqMessage.class);
+
+            switch (rabbitMessageIn.getActionCode()) {
+                case ACTION_CODE_0_0:
+                    System.out.println("REGISTRATION FAILED: " + rabbitMessageIn.getErrorMessage());
+                    JOptionPane.showMessageDialog(null, "Error: " + rabbitMessageIn.getErrorMessage(), "Registration error", JOptionPane.ERROR_MESSAGE);
+                    AbstractMessageListenerContainer container = (AbstractMessageListenerContainer) registry.getListenerContainer("myListener");
+                    try {
+                        Queue sessionQueue = rabbitAdmin.declareQueue();
+                        System.out.println(sessionQueue.getName() + " declared successfully!");
+                        container.addQueueNames(sessionQueue.getName());
+                        System.out.println(sessionQueue.getName() + " added successfully!");
+                        container.removeQueueNames(sessionQueue.getName());
+                        System.out.println(sessionQueue.getName() + " removed successfully!");
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
+
+                    System.out.println("Queues in container:");
+                    for (String queueName : container.getQueueNames()) {
+                        System.out.println(queueName);
+                    }
+                    break;
+                case ACTION_CODE_0_1:
+                    System.out.println("REGISTRATION SUCCESS!");
+                    JOptionPane.showMessageDialog(null, "Successfully registered with email " + rabbitMessageIn.getEmail() + "!", "Registration successful", JOptionPane.PLAIN_MESSAGE);
+                    registerFrame.reset();
+                    registerFrame.setVisible(false);
+                    loginFrame.reset();
+                    loginFrame.setVisible(true);
+                    break;
+                case ACTION_CODE_1:
+                    System.out.println("LOGIN SUCCESSFUL!");
+                    break;
+            }
+
+            // compact print
+            System.out.println(rabbitMessageIn);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        // compact print
-        System.out.println(rabbitMqMessageIn);
-
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
     }
-  }
+
+    public Queue declareTemporaryQueue() throws Exception {
+        AbstractMessageListenerContainer container = (AbstractMessageListenerContainer) registry.getListenerContainer("myListener");
+        Queue tempQueue = rabbitAdmin.declareQueue();
+        container.addQueueNames(tempQueue.getName());
+        System.out.println("Temporary queue " + tempQueue.getName() + " declared successfully!");
+        return tempQueue;
+    }
+}

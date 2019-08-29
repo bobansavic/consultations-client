@@ -28,6 +28,7 @@ public class ConsultationsClientApplication {
 //
         EventQueue.invokeLater(() -> {
             LoginFrame frame = context.getBean(LoginFrame.class);
+            frame.setLocationRelativeTo(null);
             frame.setVisible(true);
         });
     }
