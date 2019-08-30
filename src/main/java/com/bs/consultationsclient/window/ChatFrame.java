@@ -5,6 +5,7 @@
  */
 package com.bs.consultationsclient.window;
 
+import com.bs.consultationsclient.model.UserDto;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -35,7 +36,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
@@ -64,6 +64,8 @@ public class ChatFrame extends JFrame implements ActionListener {
     private InputMap input = taClientMessage.getInputMap();
     private final KeyStroke enter = KeyStroke.getKeyStroke("ENTER");
     private final KeyStroke shiftEnter = KeyStroke.getKeyStroke("shift ENTER");
+
+    private UserDto selectedUser;
 
 private static final String INSERT_BREAK = "insert-break";
 

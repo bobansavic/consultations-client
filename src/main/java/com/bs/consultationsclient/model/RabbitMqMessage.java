@@ -20,7 +20,7 @@ public class RabbitMqMessage implements Serializable{
     private String LastName;
     private String email;
     private char[] password;
-    private MessageDto messageDto;
+    private MessageDto chatMessage;
     private String returnQueueId;
     private String errorMessage;
     private String uniqueIdentifier;
@@ -36,11 +36,11 @@ public class RabbitMqMessage implements Serializable{
         this.returnQueueId = returnQueueId;
     }
 
-    public RabbitMqMessage(String actionCode, String email, char[] password, MessageDto messageDto, String returnQueueId) {
+    public RabbitMqMessage(String actionCode, String email, char[] password, MessageDto chatMessage, String returnQueueId) {
         this.actionCode = actionCode;
         this.email = email;
         this.password = password;
-        this.messageDto = messageDto;
+        this.chatMessage = chatMessage;
         this.returnQueueId = returnQueueId;
     }
 
@@ -92,12 +92,12 @@ public class RabbitMqMessage implements Serializable{
         this.password = password;
     }
 
-    public MessageDto getMessageDto() {
-        return messageDto;
+    public MessageDto getChatMessage() {
+        return chatMessage;
     }
 
-    public void setMessageDto(MessageDto messageDto) {
-        this.messageDto = messageDto;
+    public void setChatMessage(MessageDto chatMessage) {
+        this.chatMessage = chatMessage;
     }
     
     public String getReturnQueueId() {

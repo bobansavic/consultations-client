@@ -1,22 +1,29 @@
 package com.bs.consultationsclient.service;
 
+import com.bs.consultationsclient.model.MessageDto;
 import com.bs.consultationsclient.model.RabbitMqMessage;
+import com.bs.consultationsclient.model.UserDto;
+import com.bs.consultationsclient.util.Session;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 public class SenderService {
     private static final String SERVER_QUEUE = "server";
     private static final String ACTION_CODE_1 = "ACTION_CODE_1";
+    private static final String ACTION_CODE_5 = "ACTION_CODE_5";
 
   @Autowired
   private RabbitTemplate rabbitTemplate;
+
+  @Autowired
+  private Session session;
   
   @Autowired
   ListenerService listenerService;
@@ -48,5 +55,25 @@ public class SenderService {
         } catch (Exception ex) {
             Logger.getLogger(SenderService.class.getName()).log(Level.SEVERE, "Failed to send login request: ", ex);
         }
+  }
+
+  public void sendChatMessage(String text, UserDto receiver) {
+    ObjectMapper mapper = new ObjectMapper();
+
+    RabbitMqMessage rabbitMessage = new RabbitMqMessage();
+    rabbitMessage.setActionCode(ACTION_CODE_5);
+    MessageDto chatMessage = new MessageDto();
+    chatMessage.setTextMessage(text);
+    chatMessage.setSender(session.getActiveUser());
+    chatMessage.setReceiver(receiver);
+    chatMessage.setTimestamp(new Date());
+    rabbitMessage.setChatMessage(chatMessage);
+    rabbitMessage.setReturnQueueId(session.getActiveUser().getUniqueIdentifier());
+    try {
+      String jsonPayload = mapper.writeValueAsString(rabbitMessage);
+      rabbitTemplate.convertAndSend(receiver.getUniqueIdentifier(), jsonPayload.getBytes());
+    } catch (JsonProcessingException e) {
+      e.printStackTrace();
+    }
   }
 }

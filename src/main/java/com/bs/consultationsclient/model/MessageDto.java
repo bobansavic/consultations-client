@@ -15,7 +15,7 @@ import java.util.Date;
 public class MessageDto implements Serializable{
     
     private UserDto sender;
-    private UserDto reciever;
+    private UserDto receiver;
     private String textMessage;
     private Date timestamp;
 
@@ -27,12 +27,12 @@ public class MessageDto implements Serializable{
         this.sender = sender;
     }
 
-    public UserDto getReciever() {
-        return reciever;
+    public UserDto getReceiver() {
+        return receiver;
     }
 
-    public void setReciever(UserDto reciever) {
-        this.reciever = reciever;
+    public void setReceiver(UserDto receiver) {
+        this.receiver = receiver;
     }
 
     public String getTextMessage() {
